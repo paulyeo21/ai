@@ -1,5 +1,6 @@
 package src
 
 type Player struct {
-	Name string
+	Name   string
+	Marker int
 }
