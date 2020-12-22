@@ -3,6 +3,11 @@ cols = '123456789'
 default_box_value = "123456789"
 
 def cross(a, b):
+    # output = []
+    #     for s in a:
+    #         for t in b:
+    #             output.append(s + t)
+    # return output
     return [s+t for s in a for t in b]
 
 boxes = cross(rows, cols)

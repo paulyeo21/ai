@@ -84,10 +84,11 @@ def invalid(values):
     Input: Sudoku in dictionary form
     Output: Boolean
     """
-    for box in values.keys():
-        if len(values[box]) == 0:
-            return True
-    return False
+    # for box in values.keys():
+    #     if len(values[box]) == 0:
+    #         return True
+    # return False
+    return len([box for box in values.keys() if len(values[box]) == 0]) != 0
 
 def solved(values):
     """
@@ -96,10 +97,11 @@ def solved(values):
     Input: Sudoku in dictionary form
     Output: Boolean
     """
-    for box in values.keys():
-        if len(values[box]) != 1:
-            return False
-    return True
+    # for box in values.keys():
+    #     if len(values[box]) != 1:
+    #         return False
+    # return True
+    return len([box for box in values.keys() if len(values[box]) != 1]) == 0
 
 def search(values):
     reduce_puzzle(values)
@@ -139,3 +141,12 @@ values = grid_values(grid2)
 values = search(values)
 display(values)
 
+grid2 = '2..6.9.........67.......8923.1.2.4.78..1.3...529478.61.56...9.843...6715.1.3572..'
+values = grid_values(grid2)
+print("grid2")
+print()
+display(grid_values(grid2, default='.'))
+print()
+values = grid_values(grid2)
+values = search(values)
+display(values)
