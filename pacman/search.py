@@ -18,6 +18,8 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+from collections import deque
+from heapq import heappush, heappop
 
 class SearchProblem:
     """
@@ -72,6 +74,16 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
+def reconstructPath(goal, predecessors):
+    actions = []
+    current = goal
+    while current in predecessors:
+        predecessor, action = predecessors[current]
+        actions.append(action)
+        current = predecessor
+    actions.reverse()
+    return actions
+
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
@@ -86,18 +98,71 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    current = problem.getStartState()
+    frontier = util.Stack()
+    frontier.push((current, []))
+    predecessors = {}
+    visited = set()
+
+    while not frontier.isEmpty():
+        current, actions = frontier.pop()
+
+        if problem.isGoalState(current):
+            return actions
+
+        if current not in visited:
+            for (next_state, action, _) in problem.getSuccessors(current):
+                if next_state not in visited:
+                    frontier.push((next_state, actions + [action]))
+        visited.add(current)
+
+    return actions
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    current = problem.getStartState()
+    frontier = util.Queue()
+    frontier.push((current, []))
+    visited = set()
+
+    while not frontier.isEmpty():
+        current, actions = frontier.pop()
+        # print("current:", current, actions)
+
+        if problem.isGoalState(current):
+            return actions
+
+        if current not in visited:
+            for (next_state, action, _) in problem.getSuccessors(current):
+                # print("neighbor:", next_state, action)
+                if next_state not in visited:
+                    frontier.push((next_state, actions + [action]))
+
+        visited.add(current)
+
+    return actions
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    current = problem.getStartState()
+    frontier = util.PriorityQueue()
+    frontier.push((current, []), 0)
+    exploredStates = set()
+
+    while not frontier.isEmpty():
+        current, actions = frontier.pop()
+
+        if problem.isGoalState(current):
+            return actions
+
+        if current not in exploredStates:
+            for (next_state, action, cost) in problem.getSuccessors(current):
+                if next_state not in exploredStates:
+                    new_cost = cost + problem.getCostOfActions(actions)
+                    frontier.push((next_state, actions + [action]), new_cost)
+
+        exploredStates.add(current)
+
+    return actions
 
 def nullHeuristic(state, problem=None):
     """
@@ -108,9 +173,26 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    current = problem.getStartState()
+    frontier = util.PriorityQueue()
+    frontier.push((current, []), heuristic(current, problem))
+    exploredStates = set()
 
+    while not frontier.isEmpty():
+        current, actions = frontier.pop()
+
+        if problem.isGoalState(current):
+            return actions
+
+        if current not in exploredStates:
+            for (next_state, action, cost) in problem.getSuccessors(current):
+                if next_state not in exploredStates:
+                    new_cost = cost + problem.getCostOfActions(actions) + heuristic(next_state, problem)
+                    frontier.push((next_state, actions + [action]), new_cost)
+
+        exploredStates.add(current)
+
+    return actions
 
 # Abbreviations
 bfs = breadthFirstSearch

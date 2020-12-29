@@ -15,6 +15,7 @@
 "Common code for autograders"
 
 import cgi
+import html
 import time
 import sys
 import json
@@ -290,7 +291,7 @@ class Grades:
         if self.mute: util.unmutePrint()
         print('*** ' + message)
         if self.mute: util.mutePrint()
-        message = cgi.escape(message)
+        message = html.escape(message)
     self.messages[self.currentQuestion].append(message)
 
   def addMessageToEmail(self, message):

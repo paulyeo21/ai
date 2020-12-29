@@ -136,7 +136,8 @@ class GraphSearch(SearchProblem):
 goal_states: %s
 %s""" % (self.start_state, " ".join(self.goals), "\n".join(edges))
 
-
+    def getCoordinates(self, state):
+        return state
 
 def parseHeuristic(heuristicText):
     heuristic = {}
